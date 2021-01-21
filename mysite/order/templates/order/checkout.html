@@ -1,0 +1,189 @@
+{% extends 'product/base.html' %}
+
+{% block content %}
+{% load static %}
+<div class="container">
+ <div class="row">
+		<div class="col-lg-6">
+			<hr>
+			<div class="row">
+				<div class="col-sm-10">
+					<p>Check the shipping information:</p>
+				</div>
+				<div class="col-sm-2">
+					<a href="{% url 'account' %}">Edit</a>
+				</div>
+			</div>
+			<hr>
+			
+			<div class="row">
+				<div class="col-sm-4">
+					<p style="font-weight: bold;">Region:</p>
+				</div>
+				<div class="col-sm-4">
+					<p>{{ request.user.region }}</p>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-4">
+					<p style="font-weight: bold;">District:</p>
+				</div>
+				<div class="col-sm-4">
+					<p>{{ request.user.district }}</p>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-4">
+					<p style="font-weight: bold;">City:</p>
+				</div>
+				<div class="col-sm-4">
+					<p>{{ request.user.city }}</p>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-4">
+					<p style="font-weight: bold;">Zipcode:</p>
+				</div>
+				<div class="col-sm-4">
+					<p>{{ request.user.zip_code }}</p>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-4">
+					<p style="font-weight: bold;">Street:</p>
+				</div>
+				<div class="col-sm-4">
+					<p>{{ request.user.street }}</p>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-4">
+					<p style="font-weight: bold;">House:</p>
+				</div>
+				<div class="col-sm-4">
+					<p>{{ request.user.house }}</p>
+				</div>
+			</div>
+
+			<form id="form"> {% csrf_token %}
+				<input id="form-button" class="btn btn-success btn-block mt-3" type="submit" value="Continue">
+			</form>
+
+
+			<br>
+			<div class="box-element hidden" id="payment-info">
+				<!-- Set up a container element for the button -->
+                <div id="paypal-button-container"></div>
+			</div>
+
+		</div>
+
+		<div class="col-lg-6">
+			<div class="box-element">
+                <a  class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Back to cart</a>
+                <hr>
+                <h3>Order Summary</h3>
+                <hr>
+				{% for item in order.order_item.all %}
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="row">
+							<div class="col">
+								<img class="img-fluid" src="{{ item.product.image.url }}" width="150px" />
+							</div>
+							<div class="col">
+								<p class="mt-3">{{ item.product.name }}</p>
+							</div>
+							<div class="col" id="cart-item">
+								<p class="mt-3">x {{ item.quantity }}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr>
+				{% endfor %}
+                <h5>Items: {{ request.session.items_total  }}</h5>
+                <h5>Total:{{ order.total }} руб</h5>
+            </div>
+		</div>
+ </div>
+ </div>
+
+	<!-- Include the PayPal JavaScript SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AY8qJFFQnLF32Bvg1HFhEjvXL2Ousm4uCfC-UkKF8Vt2Qe2KcJteuS6PLL6jKjPT-J6PTEJ1awCT5wXW&currency=RUB&disable-funding=credit"></script>
+
+    <script>
+    	var total = '{{ order.total }}'
+
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+
+           style: {
+                color:  'blue',
+                shape:  'rect',
+            },
+
+
+            // Set up the transaction
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: parseFloat(total).toFixed(2)
+                        }
+                    }]
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    submitFormData()
+                });
+            }
+        }).render('#paypal-button-container');
+    </script>
+
+<script type="text/javascript">
+		var form = document.getElementById('form')
+		form.addEventListener('submit', function(e){
+	    	e.preventDefault();
+	    	console.log('Form Submitted...');
+			document.getElementById('form-button').classList.add("hidden");
+			document.getElementById('payment-info').classList.remove("hidden");
+	    })
+
+
+	    function submitFormData(){
+	    	console.log('Payment button clicked')
+
+	    	var orderTotal = {
+				'total':total,
+			}
+
+	    	var url = "/process_order/"
+	    	fetch(url, {
+	    		method:'POST',
+	    		headers:{
+	    			'Content-Type':'application/json',
+	    			'X-CSRFToken':csrftoken,
+	    		},
+	    		body:JSON.stringify({ 'orderTotal': orderTotal }),
+
+	    	})
+	    	.then((response) => response.json())
+	    	.then((data) => {
+				console.log('Success:', data);
+				alert('Оплата произведена успешно');
+
+				window.location.href = "{% url 'main' %}"
+				})
+		}
+		
+</script>
+{% endblock content%}

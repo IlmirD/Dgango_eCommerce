@@ -1,0 +1,194 @@
+{% extends 'product/base.html' %}
+
+{% block title %}Account{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="container mt-5">
+    <div id="content">
+        <div class="row">
+            <!--First column -->
+            <div class="col-sm-3">
+                <div>
+                    <h4>{{ request.user.username }}</h4>
+                </div>
+            </div>
+            <!-- Second column -->
+            <div class="col-sm-9" style="padding-left: 30px;">
+                <!-- Shipping information --> 
+                <hr>
+                <div>
+                    <h4>Shipping address</h4>
+                </div>
+                <form id="form"> {% csrf_token %}
+                    <div id="shipping-info">
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <p>Region</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-field">
+                                    <input class="form-control" value="{{ request.user.region }}" type="text" name="region">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <p>District</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-field">
+                                    <input class="form-control" value="{{ request.user.district }}" type="text" name="district">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <p>City</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-field">
+                                    <input class="form-control" value="{{ request.user.city }}" type="text" name="city">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <p>Zipcode</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-field">
+                                    <input class="form-control" value="{{ request.user.zip_code }}" type="text" name="zipcode">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <p>Street</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-field">
+                                    <input class="form-control" value="{{ request.user.street }}" type="text" name="street">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <p>House</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-field">
+                                    <input class="form-control" value="{{ request.user.house }}" type="text" name="house">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-8">
+                            <input id="form-button" class="btn btn-success btn-block mt-3 hidden" type="submit" value="Save">
+                        </div>
+                        <div class="col-sm-8">
+                            <input id="btnEdit" class="btn btn-block mt-3" type="button" value="Edit">
+                        </div>
+
+                    </div>
+                </form>
+
+                <!-- Orders -->
+                <hr>
+                <div class="mt-2">
+                    <h4>My orders</h4>
+                </div>
+                {% for order in orders %}
+                    {% for item in order.order_item.all %}
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col">
+                                    <img class="img-fluid" src="{{ item.product.image.url }}" width="80px"/>
+                                </div>
+                                <div class="col">
+                                    <p>{{ item.product.name }}</p>
+                                </div>                           
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col">
+                                    <p class="ml-4">x {{ item.quantity }}</p>
+                                </div>
+                                <div class="col">
+                                    <p>{{ item.product.price }}</p>
+                                </div>                           
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    var btnEdit = document.getElementById('btnEdit')
+
+    btnEdit.addEventListener('click', function(e){
+        e.preventDefault();
+        var btn = document.getElementById('form-button').classList.remove('hidden');
+        var btnEdit = document.getElementById('btnEdit').classList.add('hidden')
+    });
+
+    var form = document.getElementById('form');
+
+    form.addEventListener('submit', function(e){
+        e.preventDefault();
+        console.log('save button was pressed')
+
+        var shippingInfo = {
+				'region': null,
+				'district': null,
+				'city': null,
+				'zipcode': null,
+				'street': null,
+				'house': null,
+			}
+        
+        shippingInfo.region = form.region.value
+        shippingInfo.district = form.district.value
+        shippingInfo.city = form.city.value
+        shippingInfo.zipcode = form.zipcode.value
+        shippingInfo.street = form.street.value
+        shippingInfo.house = form.house.value
+
+        var url = "/shipping_address/"
+	    	fetch(url, {
+	    		method:'POST',
+	    		headers:{
+	    			'Content-Type':'application/json',
+	    			'X-CSRFToken':csrftoken,
+	    		},
+	    		body:JSON.stringify({'shipping':shippingInfo}),
+
+	    	})
+	    	.then((response) => response.json())
+	    	.then((data) => {
+				console.log('Success:', data);
+				// alert('Shipping address saved');
+                var btn = document.getElementById('form-button').classList.add('hidden');
+                var btnEdit = document.getElementById('btnEdit').classList.remove('hidden')
+				})
+    })
+</script>
+
+{% endblock content %}

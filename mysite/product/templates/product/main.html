@@ -1,0 +1,85 @@
+{% extends "product/base.html" %}
+
+ {% block title %}Main{% endblock %}
+
+ {%block content %}
+ {% load static %}
+ 
+<div class="container">
+    <div class="col">
+        {% if marketing %}
+        <!-- Marketing -->
+        <div class="row mt-4" style="justify-content: center;">  <!--background-color: #f1f1f1;-->
+          <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner" style="border: 2px solid #f1f1f1; border-radius: 15px;">
+                    {% for m in marketing %}
+                        {% if forloop.first %}
+                            <div class="carousel-item active">
+                        {% else %}
+                            <div class="carousel-item">
+                        {% endif %}
+                        <a href="{{ m.get_absolute_url }}">
+                          {% if m.marketing_image %}
+                            <img class="img-fluid" id="carousel-image" src="{{ m.marketing_image.url }}">
+                          {% endif %}
+                        </a>
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleIndicators" data-slide="prev">&#10094;</a>
+                        <a class="carousel-control-next" href="#carouselExampleIndicators" data-slide="next">&#10095;</a>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+            
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="border" style="margin:5 auto;">
+                    <a href="{% url 'new_arrival' %}">
+                      {% for n in new_arrival %}
+                        {% if n.image %}
+                          <img class='img-fluid' src="{{ n.image.url }}" width="300px"/>
+                        {% endif %}
+                      {% endfor %}
+                    </a>
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="border" style="margin:5 auto;">
+                    <a href="{% url 'discount' %}">
+                      {% for d in discount %}
+                        {% if d.image %}
+                          <img class='img-fluid' src="{{ d.image.url }}" width="300px"/>
+                        {% endif %}
+                      {% endfor %}
+                    </a>
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="border" style="margin:5 auto;">
+                    <a href="{% url 'sale_off' %}">
+                      {% for s in sale_off %}
+                        {% if s.image %}
+                          <img class='img-fluid' src="{{ s.image.url }}" width="300px"/>
+                        {% endif %}
+                      {% endfor %}
+                    </a>
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="border" style="margin:5 auto;">
+                    <a href="{% url 'sale_off' %}">
+                      <img class='img-fluid' src="{% static 'product/img/popular.jpg' %}" width="300px"/>
+                    </a>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+</div>
+
+{% endblock content %}
+

@@ -1,0 +1,235 @@
+/* Product */
+.border {
+  text-align: center;
+  padding: 10px;
+  margin-top: 40px;
+  transition: transform .2s;
+  border-radius: 5px;
+}
+
+.border:hover {
+  transform: scale(1.05);
+}
+
+#product-image {
+  padding: 10px;
+  height: 260px;
+  width: 280px;
+  object-fit: contain;
+}
+
+#product-border {
+  margin: 5 auto;
+  height: 350px;
+  width: 350px;
+}    
+
+/* Margin for pagination */
+
+#product-row {
+  margin-bottom: 50px;
+}
+
+/**********************************************************/
+/* Main */
+
+#carousel-image{
+  object-fit: contain;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  cursor: pointer;
+  width: auto;
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+  -webkit-user-select: none;
+  padding: 20px;
+}
+
+/*********************************************************/
+/* Search */
+#search_btn {
+  float: left;
+  width: 60px;
+  height: 40px;
+  background: #2196F3;
+  color: white;
+  font-size: 18px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#search-result {
+  padding-top: 15px; 
+  padding-bottom: 15px;
+}
+
+/*********************************************************/
+/* Detailed view */
+#featured {
+  height: 300px;
+  width: 440px;
+  object-fit: contain;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid #ccc5c5;
+}
+
+.thumbnail {
+  object-fit: contain;
+  padding: 10px;
+  width: 90px;
+  height: 80px;
+  cursor: pointer;
+  opacity: 0.5;
+  margin: 5px;
+  border: 1px solid #ccc5c5;
+}
+.thumbnail:hover {
+  opacity: 1;
+}
+.activity {
+  opacity: 1;
+}
+
+#slide-wrapper {
+  max-width: 500px;
+  display: flex;
+  min-height: 100px;
+  align-items: center;
+}
+
+#slider {
+  width: 500px;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: hidden;
+}
+
+/* Next & previous buttons */
+.prev,
+.next {
+  cursor: pointer;
+  padding: 5px;
+  width: auto;
+  color: white;
+  font-weight: bold;
+  font-size: 30px;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Image zooming */
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (Image) */
+.modal-content {
+  padding: 50px;
+  margin: auto;
+  display: block;
+  height: 100%;
+  max-height: 650px;
+  width: 100%;
+  max-width: 550px;
+}
+
+/* Add Animation - Zoom in the Modal */
+.modal-content{
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+  from {transform:scale(0)}
+  to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+  position: absolute;
+  z-index: 2;
+  right: 35px;
+  color: #ccb2b2;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/*******************************************************/
+/* Cart */
+.chg-quantity{
+	width: 12px;
+	cursor: pointer;
+	display: block;
+	margin-top: 5px;
+	transition:.1s;
+}
+.chg-quantity:hover{
+	opacity: .6;
+}
+#cart-item {
+  padding: 10px;
+}
+#cart-item {
+  text-align: center;
+}
+
+.form-field{
+	width:250px;
+	display: inline-block;
+	padding: 5px;
+}
+.hidden{
+	display: none!important;
+}
+
+/******************************************************************/
+/* Scroll to top */
+#top {
+  display: none; /* Hidden by default */
+  position: fixed; /* Fixed/sticky position */
+  bottom: 20px; /* Place the button at the bottom of the page */
+  right: 30px; /* Place the button 30px from the right */
+  z-index: 99; /* Make sure it does not overlap */
+  border: none; /* Remove borders */
+  outline: none; /* Remove outline */
+  background-color: #BCC6CA; /* Set a background color */
+  color: black; /* Text color */
+  cursor: pointer; /* Add a mouse pointer on hover */
+  padding: 15px; /* Some padding */
+  border-radius: 10px; /* Rounded corners */
+  font-size: 18px; /* Increase font size */
+}
+
+#top:hover {
+  opacity: 0.6;
+}
+html {
+  scroll-behavior: smooth;
+}

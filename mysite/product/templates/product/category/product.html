@@ -1,0 +1,51 @@
+{% extends "product/base.html" %}
+
+
+{% block title %}Catalog{% endblock %}
+
+{% block content %}
+{% load static %}
+
+<div class="container">
+    <div id="content">
+        <div class="row" style="padding: 10px;">
+            <!-- Filter -->
+            <div class="dropdown show">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuFilter"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Filter
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <form method="get" action="#">
+                        <input class="dropdown-item" type="submit" value="name" name="name">
+                        <input class="dropdown-item" type="submit" value="low to high" name="l2h">
+                        <input class="dropdown-item" type="submit" value="high to low" name="h2l">
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product -->
+        {% if product %}
+        <div class="row" id="product-row">
+            {% for p in product %}
+            <div class="col-sm-4">
+                <div class="border" style="margin:5 auto;">
+                    <a class="product" href="{{ p.get_absolute_url }}">
+                        <img class="img-fluid" id="product-image"
+                            {% if p.image %}
+                            src="{{ p.image.url}}"/>
+                            {% endif %}
+                        <p style="margin-right:210px; margin-top:10px;">${{ p.price }}</p>
+                        <p style="margin-top:-40px; margin-left:200px;">{{ p.name }}</p>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% include 'product/product_pagination.html' with product=product %}
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}

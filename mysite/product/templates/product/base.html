@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <link href="{% static 'product/css/product_.css' %}" rel="stylesheet">
+    <link href="{% static 'product/css/sidebar.css' %}" rel="stylesheet">
+
+    <script src="https://use.fontawesome.com/releases/v5.13.1/js/all.js" data-auto-replace-svg="nest"></script>
+
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
+            integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ"
+            crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"
+            integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY"
+            crossorigin="anonymous"></script>
+
+
+  
+    <!-- CSRF token for checkout function-->
+    <script type="text/javascript">
+        function getToken(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+                }
+            }
+        }
+        return cookieValue;
+        }
+        var csrftoken = getToken('csrftoken');
+    </script>
+
+</head>
+
+<body>
+    <div class="wrapper" id="content">
+    <!-- Sidebar  -->
+    <header class="fixed-top">
+        <div class="overlay"></div>
+        <nav id="sidebar">
+            <div id="dismiss">
+                <i class="fas fa-times"></i>
+            </div>
+
+            <div class="sidebar-header">
+                <h3>Catalog</h3>
+            </div>
+
+            <ul class="list-unstyled components">
+                <li class="{% if request.resolver_match.url_name == 'computer' %}active{% endif %}">
+                    <a href="{% url 'computer' %}"><i class="fas fa-laptop"></i> Computers</a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'mobile' %}active{% endif %}">
+                    <a href="{% url 'mobile' %}"><i class="fas fa-mobile-alt"></i> Mobiles</a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'tv' %}active{% endif %}">
+                    <a href="{% url 'tv' %}"><i class="fas fa-tv"></i> TVs</a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'watch' %}active{% endif %}">
+                    <a href="{% url 'watch' %}"><i class="fas fa-tv"></i> Watches</a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'accessories' %}active{% endif %}">
+                    <a href="{% url 'accessories' %}"><i class="fas fa-tv"></i> Accessories</a>
+                </li>
+            </ul>
+        </nav>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+
+                <div>
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <span>Catalog</span>
+                    </button>
+                </div>
+
+                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="{% if request.resolver_match.url_name == 'main' %}active{% endif %}">
+                            <a class="nav-link" href="{% url 'main' %}">
+                                    <i class="fas fa-home"></i> Main
+                            </a>
+                        </li>
+                        <li class="{% if request.resolver_match.url_name == 'account' %}active{% endif %}">
+                            <a class="nav-link" href="{% url 'account' %}">
+                                    <i class='fas fa-user-alt'></i> Account
+                            </a>
+                        </li>
+                        <li class="{% if request.resolver_match.url_name == 'cart' %}active{% endif %}">
+                            <a class="nav-link" href="{% url 'cart' %}">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="badge badge-light" id="quantity">
+                                    {% if not request.session.items_total %}
+                                    0
+                                    {% else %}
+                                    {{ request.session.items_total }}
+                                    {% endif %}
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Search -->
+    <div class="container mb-2" style="padding-top: 100px;">
+        <div class="row">
+            <div class="col-sm-3">
+                <a href="{% url 'main' %}">
+                    <img class="ml-2" src="{% static 'product/img/eCommerce.png' %}" width="250px"/>
+                </a>
+            </div>
+            
+            <div class="col-sm-9" style="padding-left: 30px;">
+                <form class="form-inline my-2 my-lg-0" method="get" action="{% url 'search' %}">
+                    <input required class="form-control mr-2 w-75" type="search" name="q" placeholder="Search" 
+                    oninvalid="this.setCustomValidity('Enter something for search')"
+                    oninput="this.setCustomValidity('')"/>
+                    <button id="search_btn" type="submit"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="topFunction()" id="top" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+
+        {% block content %}
+            
+        {% endblock content %}
+        
+    </div>
+ 
+
+<footer id="sticky-footer" class="py-4 bg-dark text-white-50">
+    <div class="container text-center">
+      <small>Copyright &copy; eCommerce</small>
+    </div>
+</footer>
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- Popper.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+<!-- jQuery Custom Scroller CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+<script src="{% static 'product/js/jquery.js' %}"></script>
+
+<!-- Navbar -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#sidebar").mCustomScrollbar({
+            theme: "minimal"
+        });
+
+        $('#dismiss, .overlay').on('click', function () {
+            $('#sidebar').removeClass('active');
+            $('.overlay').removeClass('active');
+        });
+
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').addClass('active');
+            $('.overlay').addClass('active');
+            $('.collapse.in').toggleClass('in');
+            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        });
+    });
+
+</script>
+
+<!-- Scroll to top -->
+<script>
+    //Get the button:
+    mybutton = document.getElementById("top");
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 50) {
+        mybutton.style.display = "block";
+    } else {
+        mybutton.style.display = "none";
+        }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
+
+</script>
+
+</body>
+
+</html>
